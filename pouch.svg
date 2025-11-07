@@ -1,0 +1,5 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'>
+  <rect width='100%' height='100%' rx='12' fill='#fef8ff'/>
+  <ellipse cx='150' cy='100' rx='90' ry='50' fill='#ffeef8'/>
+  <text x='150' y='108' text-anchor='middle' font-family='Georgia' font-size='18' fill='#9b2b5a'>Túi đựng bút</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'>
+  <rect width='100%' height='100%' rx='12' fill='#fff0f3'/>
+  <rect x='30' y='30' width='240' height='40' rx='8' fill='#ffb6c1'/>
+  <text x='150' y='60' text-anchor='middle' font-family='Georgia' font-size='18' fill='#7a1f2e'>Bút gel 0.5</text>
+  <circle cx='240' cy='120' r='30' fill='#ff7b97'/>
+  <text x='240' y='128' text-anchor='middle' font-family='Arial' font-size='16' fill='#fff'>✎</text>
+</svg>

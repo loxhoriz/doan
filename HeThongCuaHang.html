@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HỆ THỐNG CỬA HÀNG — PENS</title>
+  <!-- Fonts: Noto Sans for body, Playfair Display for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700;900&display=swap&subset=vietnamese" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--accent:#7a1f2e;--accent-2:#ff7b97;--bg:#fff;--card:#fff;--muted:#6b2a3a}
+    *{box-sizing:border-box}
+    body{font-family:'Noto Sans',Segoe UI,Tahoma,Arial,sans-serif;margin:0;background:var(--bg);color:#222;-webkit-font-smoothing:antialiased}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px;border-bottom:1px solid #f0e4e7}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo img{height:46px}
+    .logo .logo-text{font-weight:900;color:var(--accent);letter-spacing:2px}
+    .wrap{max-width:1100px;margin:26px auto;padding:0 16px}
+    h1{font-family:'Playfair Display',Georgia,serif;color:var(--accent);margin:0 0 8px;font-size:28px}
+    .intro{color:#5c2a33;margin-bottom:18px}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:18px}
+    .controls input{flex:1;padding:10px;border-radius:8px;border:1px solid #eee}
+    .controls button{padding:10px 14px;border-radius:8px;border:0;background:linear-gradient(90deg,var(--accent-2),#ff9bb9);color:#fff;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:var(--card);border-radius:10px;padding:14px;border:1px solid #f2e1e6;box-shadow:0 8px 20px rgba(124,16,57,0.04)}
+    .card h3{margin:0 0 6px;font-size:18px;color:var(--accent)}
+    .muted{color:#666;font-size:14px}
+    .phone{font-weight:700;color:var(--accent-2)}
+    .hours{margin-top:8px;font-size:14px;color:#444}
+    .map{height:220px;border-radius:8px;border:1px solid #eee;background:linear-gradient(180deg,#fff7f9,#fff);display:flex;align-items:center;justify-content:center;color:#bbb}
+    footer{padding:20px 0;text-align:center;color:#666;border-top:1px solid #f0e4e7;margin-top:24px}
+    @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:620px){.grid{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}.controls button{width:100%}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="images/umaru.png" alt="PENS logo">
+      <div class="logo-text">PENS</div>
+    </div>
+    <nav>
+      <a href="index.html">Trang chủ</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <h1>Hệ thống cửa hàng PENS</h1>
+    <p class="intro">Tìm cửa hàng PENS gần bạn. Dưới đây là danh sách các cửa hàng chính, giờ mở cửa và thông tin liên hệ. Nếu bạn cần hỗ trợ, vui lòng gọi số Hotline.</p>
+
+    <div class="controls">
+      <input id="cityInput" placeholder="Nhập tỉnh/TP (ví dụ: Hà Nội, TP HCM) để lọc" />
+      <button id="filterBtn">Tìm</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px">
+      <section style="min-height:320px">
+        <div id="storeGrid" class="grid">
+          <!-- store cards injected by script -->
+        </div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <h3>Hotline hỗ trợ</h3>
+          <p class="phone">0123-456-789</p>
+          <p class="muted">Email: <a href="mailto:hotro@pens.example">hotro@pens.example</a></p>
+          <div style="margin-top:12px">
+            <h4 style="margin:0 0 6px">Bản đồ</h4>
+            <div class="map">Bản đồ (gắn iframe Google Maps nếu muốn)</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Giờ làm việc</h3>
+          <p class="muted">Thứ 2 - Thứ 7: 08:00 — 20:00</p>
+          <p class="muted">Chủ nhật: 08:30 — 18:00</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>© 2025 PENS — Danh sách cửa hàng. <a href="index.html">Quay về Trang chủ</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // sample store data (you can expand or load from a JSON file/server)
+    const stores = [
+      {id:1, name:'PENS - Cơ sở Hà Nội - Hai Bà Trưng', city:'Hà Nội', address:'123 Phố A, Hai Bà Trưng, Hà Nội', phone:'024-888-1111', hours:'08:00 - 20:00'},
+      {id:2, name:'PENS - Cơ sở Hà Nội - Cầu Giấy', city:'Hà Nội', address:'45 Đường B, Cầu Giấy, Hà Nội', phone:'024-888-2222', hours:'08:00 - 20:00'},
+      {id:3, name:'PENS - Cơ sở TP HCM - Quận 1', city:'TP HCM', address:'10 Nguyễn Huệ, Quận 1, TP HCM', phone:'028-999-1111', hours:'08:00 - 20:00'},
+      {id:4, name:'PENS - Cơ sở TP HCM - Gò Vấp', city:'TP HCM', address:'98 Phan Văn Trị, Gò Vấp, TP HCM', phone:'028-999-2222', hours:'08:30 - 19:30'},
+      {id:5, name:'PENS - Cơ sở Đà Nẵng', city:'Đà Nẵng', address:'5 Bạch Đằng, Hải Châu, Đà Nẵng', phone:'0236-123-456', hours:'09:00 - 19:00'},
+      {id:6, name:'PENS - Cơ sở Hải Phòng', city:'Hải Phòng', address:'77 Lê Lợi, Hải Phòng', phone:'0225-321-654', hours:'08:00 - 18:00'}
+    ]
+
+    const storeGrid = document.getElementById('storeGrid')
+    const cityInput = document.getElementById('cityInput')
+    const filterBtn = document.getElementById('filterBtn')
+
+    function renderStores(list){
+      storeGrid.innerHTML = ''
+      if(!list.length){
+        storeGrid.innerHTML = '<div style="grid-column:1/-1;padding:18px;color:#666">Không tìm thấy cửa hàng theo tiêu chí. Bỏ trống ô tìm kiếm để xem tất cả.</div>'
+        return
+      }
+      list.forEach(s => {
+        const card = document.createElement('div')
+        card.className = 'card'
+        card.innerHTML = `
+          <h3>${s.name}</h3>
+          <div class="muted">${s.address}</div>
+          <div style="margin-top:8px">SĐT: <span class="phone">${s.phone}</span></div>
+          <div class="hours">Giờ mở cửa: ${s.hours}</div>
+          <div style="margin-top:8px"><a href="https://www.google.com/maps/search/${encodeURIComponent(s.address)}" target="_blank">Chỉ đường trên Google Maps</a></div>
+        `
+        storeGrid.appendChild(card)
+      })
+    }
+
+    filterBtn.addEventListener('click', ()=>{
+      const q = cityInput.value.trim().toLowerCase()
+      if(!q){ renderStores(stores); return }
+      const filtered = stores.filter(s => s.city.toLowerCase().includes(q) || s.address.toLowerCase().includes(q))
+      renderStores(filtered)
+    })
+
+    // init with all stores
+    renderStores(stores)
+  </script>
+</body>
+</html>

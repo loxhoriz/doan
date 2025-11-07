@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Vietnamese-capable webfont: Noto Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700;900&display=swap&subset=vietnamese" rel="stylesheet">
+  <!-- Serif display font for category labels (targets elements with aria-expanded) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <title>Pen&Paper — Dụng cụ học tập</title>
+    <style>
+/* Basic reset and theme */
+*{box-sizing:border-box}
+/* use Noto Sans for reliable Vietnamese glyphs, fall back to common system fonts */
+body{font-family: 'Noto Sans', 'Segoe UI', Tahoma, Verdana, sans-serif;margin:0;color:#222;background:#fff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility}
+  .topbar{background:#ffdfe6;color:#7a1f2e;padding:8px 12px;font-weight:700;text-align:right}
+/* header: center the search form while keeping logo left and actions right */
+.header-main{display:flex;align-items:center;justify-content:center;padding:18px 12px;border-bottom:1px solid #f0e4e7;position:relative}
+.header-main .logo{position:absolute;left:12px;display:flex;align-items:center}
+.header-main .logo img{display:block;height:48px}
+.header-main .logo .logo-text{margin-left:10px;font-size:20px;font-weight:900;color:#7a1f2e;letter-spacing:2px}
+.search-form{flex:0 1 66%;max-width:820px;margin:0;position:relative}
+.search-form input{width:100%;padding:12px 64px 12px 18px;height:46px;border-radius:10px;border:1px solid rgba(255,150,170,0.45);background:linear-gradient(180deg,#fff,#fff);font-size:15px;color:#333}
+.search-form input::placeholder{color:#caa;opacity:1}
+.search-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:48px;height:36px;border-radius:8px;border:0;background:linear-gradient(90deg,#ff9bb9,#ff7b97);cursor:pointer;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:18px}
+  .header-actions{display:flex;align-items:center;gap:12px;position:absolute;right:12px;min-width:120px;justify-content:flex-end}
+.cart-btn{background:transparent;border:0;font-size:18px;cursor:pointer}
+.cart-btn #cartCount{background:#ff6f8a;color:#fff;border-radius:50%;padding:2px 6px;margin-left:6px;font-weight:700}
+.auth-inline{display:flex;align-items:center;gap:8px;font-weight:700;color:#222}
+.auth-inline a{color:#222;text-decoration:none}
+.auth-inline a:hover{color:#ff5f86}
+.categories{display:flex;gap:14px;padding:14px 12px;background:#ffd0da;margin:12px;border-radius:8px;justify-content:center}
+.categories{display:flex;gap:18px;padding:14px 12px;background:#ffd0da;margin:12px;border-radius:8px;justify-content:center}
+.nav-item{position:relative}
+.nav-btn{background:transparent;border:0;color:#7a1f2e;font-weight:800;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:16px}
+.nav-btn:hover{background:#ffbfcf;transform:translateY(-2px);box-shadow:0 6px 14px rgba(124,16,57,0.08)}
+.submenu{position:absolute;top:calc(100% + 8px);left:0;min-width:180px;background:#fff;border-radius:8px;padding:6px 6px;box-shadow:0 10px 30px rgba(0,0,0,0.08);display:none;z-index:40}
+.submenu a{display:block;padding:8px 12px;color:#333;text-decoration:none;border-radius:6px}
+.submenu a:hover{background:#f7f2f4}
+.nav-item.open .submenu{display:block}
+.nav-item .nav-btn[aria-expanded="true"]{color:#7a1f2e}
+
+/* Use a display serif for category labels (buttons that use aria-expanded) so
+   the menu headings show a distinctive typographic style. Also target the
+   first button which carries a custom attribute marker `sans-serif="false"`. */
+.nav-btn[aria-expanded], .nav-btn[sans-serif="false"]{
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-weight:700;
+  letter-spacing:1px;
+  font-size:17px;
+  color:#7a1f2e;
+}
+
+/* search focus */
+.search-form input:focus{box-shadow:0 6px 20px rgba(255,105,140,0.12);border-color:#ff8aa3}
+
+.btn{transition:all .14s ease}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(255,123,151,0.18)}
+.btn.secondary:hover{background:#f3f3f3}
+
+/* subtle header shadow */
+.header-main{box-shadow:0 6px 20px rgba(124,16,57,0.04)}
+
+/* page layout */
+.container{display:flex;gap:18px;max-width:1200px;margin:18px auto;padding:0 12px}
+.filters{width:240px;background:linear-gradient(180deg,#fff5f8,#fff0f4);padding:16px;border-radius:12px;border:1px solid rgba(240,140,170,0.18);box-shadow:0 8px 24px rgba(240,80,128,0.06)}
+/* filters heading */
+.filters h3{margin:4px 0 12px 6px;color:#d43f6b;font-size:20px}
+.filters ul{list-style:none;padding:0;margin:0}
+.filters li{margin:10px 0;display:flex;align-items:center}
+.filter-btn{appearance:none;background:transparent;border:1px solid rgba(240,80,128,0.16);padding:8px 10px;border-radius:8px;color:#7a1f2e;cursor:pointer;font-weight:700}
+.filter-btn:hover{background:rgba(255,123,151,0.06);border-color:rgba(240,80,128,0.28);transform:translateY(-2px)}
+.filter-btn.active{background:linear-gradient(90deg,#ff9bb9,#ff7b97);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(255,100,140,0.12);transform:none}
+.products{flex:1}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{background:#fff;border:1px solid #eee;padding:12px;border-radius:8px;display:flex;flex-direction:column;align-items:center}
+/* Uniform product thumbnails: same height and style across categories */
+.prod-img{width:100%;height:190px;max-height:190px;object-fit:cover;border-radius:12px;border:1px solid #f1dee3;transition:transform .18s ease,box-shadow .18s ease;background:#fff}
+/* pouch (tdb) specific: slightly smaller, extra padding so shape reads well */
+/* removed pouch-specific sizing to keep thumbnails uniform */
+.card{box-shadow:0 6px 18px rgba(124,16,57,0.06);transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(124,16,57,0.12)}
+
+.card:hover .prod-img{transform:scale(1.03)}
+.thumb{width:100%;height:140px;border-radius:6px;background:linear-gradient(135deg,#ffe9ee,#ffdbe4);display:flex;align-items:center;justify-content:center;font-weight:700;color:#7a1f2e}
+.title{font-weight:700;margin:10px 0 6px}
+.price{color:#c40000;font-weight:800;margin-bottom:8px}
+.btn{padding:8px 12px;border-radius:6px;border:0;cursor:pointer}
+.btn.secondary{background:#f0f0f0}
+.btn.primary{background:#ff7b97;color:#fff}
+
+/* cart modal */
+.cart-modal{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center}
+.cart-panel{background:#fff;padding:18px;border-radius:8px;min-width:320px;max-width:420px;position:relative}
+.cart-list{list-style:none;padding:0;margin:0;max-height:300px;overflow:auto}
+.cart-list li{display:flex;gap:8px;padding:8px 0;border-bottom:1px dashed #eee}
+.cart-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.close{position:absolute;right:8px;top:8px;border:0;background:transparent;font-size:18px;cursor:pointer}
+
+/* quickview */
+.quickview{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center;z-index:80}
+.quickview-panel{background:#fff;border-radius:8px;padding:18px;display:flex;gap:18px;max-width:900px;width:90%;align-items:flex-start}
+.quickview-panel .q-image img{width:360px;height:360px;object-fit:cover;border-radius:12px;border:1px solid #f1dee3}
+.quickview-panel .q-info{flex:1}
+
+/* product detail page */
+.product-detail{max-width:1000px;margin:20px auto;padding:12px;display:flex;gap:20px}
+.pd-image img{width:480px;height:480px;object-fit:cover;border-radius:12px}
+
+
+/* responsive */
+@media (max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}.filters{display:none}}
+@media (max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.categories{overflow:auto;gap:8px;padding:10px}}
+@media (max-width:420px){.grid{grid-template-columns:repeat(1,1fr)}.search-form{max-width:100%}}
+@media (max-width:520px){
+  .header-main .logo .logo-text{display:none}
+  .search-form{flex:1 1 100%;padding:0 12px}
+  .header-main{padding:12px}
+}
+    </style>
+  </head>
+<body>
+  </div>
+  
+  <header class="site-header">
+  <div class="topbar"><a href="HeThongCuaHang.html" style="color:inherit;text-decoration:underline;font-weight:800">HỆ THỐNG CỬA HÀNG</a> &nbsp; • &nbsp; <a href="VePen.html" style="color:inherit;font-weight:800">VỀ PEN</a></div>
+    <div class="header-main">
+  <div class="logo"> <img src="images/umaru.png" alt="logo umaru"><span class="logo-text">PENS</span></div>
+      <form class="search-form" onsubmit="return false;">
+        <input id="searchInput" placeholder="Tìm kiếm dụng cụ học tập" />
+        <button class="search-btn" title="Tìm">🔍</button>
+      </form>
+        <div class="header-actions">
+        <button id="cartBtn" class="cart-btn" aria-label="Giỏ hàng">🛒 <span id="cartCount">0</span></button>
+        <div class="auth-inline">
+          <a href="http://127.0.0.1:5500/b%C3%A0i%20cu%E1%BB%91i%20m%C3%B4n/Dangnhap.html ">Đăng nhập</a>
+          <span>|</span>
+          <a href="http://127.0.0.1:5500/b%C3%A0i%20cu%E1%BB%91i%20m%C3%B4n/Dangky.html">Đăng ký</a>
+        </div>
+      </div>
+    </div>
+    <nav class="categories" id="mainNav">
+      <div class="nav-item">
+        <button class="nav-btn" sans-serif="false">TẤT CẢ </button>
+        <div class="submenu" role="menu" aria-hidden="true">
+          <a href="#">Tất cả sản phẩm</a>
+          <a href="#">Khuyến mãi</a>
+          <a href="#">Hàng mới</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <button class="nav-btn" aria-expanded="false">Bút viết</button>
+        <div class="submenu" role="menu" aria-hidden="true">
+          <a href="#">Bút gel</a>
+          <a href="#">Bút bi</a>
+          <a href="#">Bút chì</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <button class="nav-btn" aria-expanded="false">Tập vở</button>
+        <div class="submenu" role="menu" aria-hidden="true">
+          <a href="#">Tập 100 trang</a>
+          <a href="#">Tập 200 trang</a>
+          <a href="#">Sổ tay</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <button class="nav-btn" aria-expanded="false">Balo &amp; Túi</button>
+        <div class="submenu" role="menu" aria-hidden="true">
+          <a href="#">Balo trẻ em</a>
+          <a href="#">Túi đựng bút</a>
+          <a href="#">Túi vải</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <button class="nav-btn" aria-expanded="false">Dụng cụ vẽ</button>
+        <div class="submenu" role="menu" aria-hidden="true">
+          <a href="#">Hộp bút vẽ</a>
+          <a href="#">Màu nước</a>
+          <a href="#">Cọ vẽ</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <button class="nav-btn" aria-expanded="false">Phụ kiện</button>
+        <div class="submenu" role="menu" aria-hidden="true">
+          <a href="#">Gôm</a>
+          <a href="#">Thước</a>
+          <a href="#">Băng keo</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <aside class="filters">
+      <h3>Loại</h3>
+      <ul>
+        <li><button data-cat="all" class="filter-btn active">Tất cả</button></li>
+        <li><button data-cat="pen" class="filter-btn">Bút</button></li>
+        <li><button data-cat="notebook" class="filter-btn">Tập vở</button></li>
+        <li><button data-cat="bag" class="filter-btn">Balo</button></li>
+      </ul>
+    </aside>
+
+    <section class="products">
+      <h2>Sản phẩm nổi bật</h2>
+      <div id="productGrid" class="grid">
+        <!-- products injected by script.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- cart modal -->
+  <div id="cartModal" class="cart-modal" aria-hidden="true">
+    <div class="cart-panel">
+      <h3>Giỏ hàng</h3>
+      <ul id="cartList" class="cart-list"></ul>
+      <div class="cart-footer">
+        <div class="total">Tổng: <span id="cartTotal">0</span>₫</div>
+        <button id="checkoutBtn" class="btn primary">Thanh toán</button>
+      </div>
+      <button id="closeCart" class="close">✕</button>
+    </div>
+  </div>
+
+  <!-- quick view modal -->
+  <div id="quickView" class="quickview" aria-hidden="true">
+    <div class="quickview-panel">
+      <button id="qClose" class="close">✕</button>
+      <div class="q-image"><img id="qImg" src="" alt=""></div>
+      <div class="q-info">
+        <h3 id="qTitle"></h3>
+        <div id="qPrice" class="price"></div>
+        <p id="qDesc">Mô tả ngắn về sản phẩm.</p>
+        <div style="margin-top:12px"><button id="qAdd" class="btn primary">Thêm vào giỏ</button> <a id="qDetail" class="btn secondary" href="#">Xem chi tiết</a></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p>© 2025 Pen&Paper — Cửa hàng dụng cụ học tập.
+    </div>
+  </footer>
+
+  <script>
+  // inlined data.js
+  // product data (images in images/ folder)
+  const products = [
+  {id:1, title:'Bút gel màu 0.5', price:12000, cat:'pen', img:'images/butgelmau0.5.jpeg', desc:'Bút gel êm, mực lên đều, thích hợp viết nhanh.'},
+  {id:2, title:'Bút bi xịn', price:8000, cat:'pen', img:'images/bbx.jpg', desc:'Bút bi siêu bền, viết mượt, mẫu mã đẹp.'},
+  {id:3, title:'Tập 200 trang', price:18000, cat:'notebook', img:'images/s200.jpeg', desc:'Tập 200 trang, giấy trắng, bìa cứng.'},
+  {id:4, title:'Tập kẻ ngang', price:15000, cat:'notebook', img:'images/tkn.jpeg', desc:'Tập kẻ ngang A4, phù hợp học sinh.'},
+    {id:5, title:'Balo trẻ em', price:250000, cat:'bag', img:'images/balo.webp', desc:'Balo nhẹ, nhiều ngăn, họa tiết dễ thương.'},
+  {id:6, title:'Hộp bút vẽ', price:45000, cat:'pen', img:'images/hopbutve.jpeg', desc:'Hộp bút đủ màu, chất lượng tốt cho học vẽ.'},
+  {id:7, title:'Sổ tay A5', price:22000, cat:'notebook', img:'images/sta5.jpg', desc:'Sổ tay tiện dụng A5, giấy mịn.'},
+  {id:8, title:'Túi đựng bút', price:12000, cat:'bag', img:'images/tdb.png', desc:'Túi đựng bút nhỏ gọn, dễ mang theo.'}
+  ]
+  </script>
+  <script>
+  // dropdown menu behavior for category nav
+  (function(){
+    const nav = document.getElementById('mainNav')
+    if(!nav) return
+    const items = Array.from(nav.querySelectorAll('.nav-item'))
+
+    items.forEach(it=>{
+      const btn = it.querySelector('.nav-btn')
+      const submenu = it.querySelector('.submenu')
+      if(!btn || !submenu) return
+      btn.addEventListener('click', (e)=>{
+        const isOpen = it.classList.contains('open')
+        // close all
+        items.forEach(i=>{ i.classList.remove('open'); const b=i.querySelector('.nav-btn'); if(b) b.setAttribute('aria-expanded','false'); const s=i.querySelector('.submenu'); if(s) s.setAttribute('aria-hidden','true') })
+        if(!isOpen){
+          it.classList.add('open')
+          btn.setAttribute('aria-expanded','true')
+          submenu.setAttribute('aria-hidden','false')
+        }
+        e.stopPropagation()
+      })
+    })
+
+    // close when clicking outside
+    document.addEventListener('click', ()=>{
+      items.forEach(i=>{ i.classList.remove('open'); const b=i.querySelector('.nav-btn'); if(b) b.setAttribute('aria-expanded','false'); const s=i.querySelector('.submenu'); if(s) s.setAttribute('aria-hidden','true') })
+    })
+
+    // close on escape
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') document.dispatchEvent(new Event('click')) })
+  })()
+  </script>
+
+  <script>
+  // inlined script.js (depends on products variable above)
+  const productGrid = document.getElementById('productGrid')
+  const cartBtn = document.getElementById('cartBtn')
+  const cartCount = document.getElementById('cartCount')
+  const cartModal = document.getElementById('cartModal')
+  const cartList = document.getElementById('cartList')
+  const cartTotal = document.getElementById('cartTotal')
+  const closeCart = document.getElementById('closeCart')
+  const checkoutBtn = document.getElementById('checkoutBtn')
+
+  // load cart from localStorage so product page and home stay in sync
+  let cart = JSON.parse(localStorage.getItem('cart') || '{}')
+
+  function saveCart(){
+    localStorage.setItem('cart', JSON.stringify(cart))
+  }
+
+  function formatVND(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+
+  function renderProducts(filter='all'){
+    productGrid.innerHTML = ''
+    const list = products.filter(p => filter==='all' ? true : p.cat===filter)
+    list.forEach(p => {
+      const card = document.createElement('div')
+  card.className = 'card'
+  // mark the card with its category so CSS can target specific types (e.g., notebook)
+  card.setAttribute('data-cat', p.cat)
+  // tag pouch cards (filename contains pouch or tdb) so we can size them specifically
+  if(p.img && /pouch|tdb/i.test(p.img)) card.classList.add('pouch')
+      card.innerHTML = `
+      <img src="${p.img}" alt="${p.title}" class="prod-img">
+      <div class="title">${p.title}</div>
+      <div class="price">${formatVND(p.price)}₫</div>
+      <div style="margin-top:auto;display:flex;gap:8px"><button class="btn primary" data-id="${p.id}">Thêm vào giỏ</button><button class="btn secondary qview" data-id="${p.id}">Xem nhanh</button></div>
+    `
+      productGrid.appendChild(card)
+      // graceful fallback: if JPEG not present, try the SVG placeholder with same basename
+      const imgEl = card.querySelector('img')
+      if(imgEl){
+          imgEl.onerror = function(){
+            try{
+              // if expected raster/webp missing, fall back to an SVG placeholder with same basename
+              this.src = this.src.replace(/\.(jpe?g|png|webp)$/i, '.svg')
+            }catch(e){}
+          }
+      }
+    })
+  }
+
+  function updateCartCount(){
+    const qty = Object.values(cart).reduce((s,v)=>s+v,0)
+    cartCount.textContent = qty
+  }
+
+  function openCart(){
+    cartModal.style.display='flex'
+    cartModal.setAttribute('aria-hidden','false')
+    renderCart()
+  }
+  function closeCartPanel(){
+    cartModal.style.display='none'
+    cartModal.setAttribute('aria-hidden','true')
+  }
+
+  function renderCart(){
+    cartList.innerHTML = ''
+    let total = 0
+    for(const id in cart){
+      const p = products.find(x=>x.id==id)
+      const qty = cart[id]
+      total += p.price * qty
+      const li = document.createElement('li')
+      li.innerHTML = `<div style="flex:1">${p.title} <div style='color:#888;font-size:13px'>x${qty}</div></div><div style='font-weight:700'>${formatVND(p.price*qty)}₫</div>`
+      cartList.appendChild(li)
+    }
+    cartTotal.textContent = formatVND(total)
+  }
+
+  // add listeners
+  productGrid.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button.primary[data-id]')
+    if(!btn) return
+    const id = btn.getAttribute('data-id')
+    cart[id] = (cart[id]||0) + 1
+    saveCart()
+    updateCartCount()
+  })
+
+  // quick-view modal
+  const quickView = document.getElementById('quickView')
+  const qClose = document.getElementById('qClose')
+  const qImg = document.getElementById('qImg')
+  const qTitle = document.getElementById('qTitle')
+  const qPrice = document.getElementById('qPrice')
+  const qDesc = document.getElementById('qDesc')
+  const qAdd = document.getElementById('qAdd')
+  const qDetail = document.getElementById('qDetail')
+
+  productGrid.addEventListener('click', (e)=>{
+    const qbtn = e.target.closest('button.qview')
+    if(!qbtn) return
+    const id = Number(qbtn.getAttribute('data-id'))
+    const p = products.find(x=>x.id===id)
+    if(!p) return
+    qImg.src = p.img
+    qImg.alt = p.title
+    qTitle.textContent = p.title
+    qPrice.textContent = formatVND(p.price) + '₫'
+    qDesc.textContent = p.desc || ''
+    qAdd.onclick = ()=>{ cart[id] = (cart[id]||0)+1; saveCart(); updateCartCount(); renderCart(); }
+    qDetail.href = 'product.html?id=' + id
+    quickView.style.display = 'flex'
+  }
+  )
+  qClose.addEventListener('click', ()=> quickView.style.display='none')
+
+  cartBtn.addEventListener('click', openCart)
+  closeCart.addEventListener('click', closeCartPanel)
+  checkoutBtn.addEventListener('click', ()=>{
+    alert('Thanh toán tạm (demo) - Tổng: ' + cartTotal.textContent + '₫')
+    cart = {}
+    saveCart()
+    updateCartCount()
+    renderCart()
+    closeCartPanel()
+  })
+
+  // filter buttons
+  Array.from(document.querySelectorAll('.filter-btn')).forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'))
+      btn.classList.add('active')
+      const cat = btn.getAttribute('data-cat')
+      renderProducts(cat)
+    })
+  })
+
+  // search
+  const searchInput = document.getElementById('searchInput')
+  const searchForm = document.querySelector('.search-form')
+  searchForm.addEventListener('submit', ()=>{
+    const q = searchInput.value.trim().toLowerCase()
+    productGrid.innerHTML = ''
+    const list = products.filter(p => p.title.toLowerCase().includes(q))
+    list.forEach(p=>{
+      const card = document.createElement('div')
+      card.className = 'card'
+      card.innerHTML = `\n      <div class="thumb">${p.title.split(' ')[0]}</div>\n      <div class="title">${p.title}</div>\n      <div class="price">${formatVND(p.price)}₫</div>\n      <div style="margin-top:auto"><button class="btn primary" data-id="${p.id}">Thêm vào giỏ</button></div>\n    `
+      productGrid.appendChild(card)
+    })
+  })
+
+  // initialize
+  renderProducts()
+  updateCartCount()
+
+  // listen to localStorage changes so multiple tabs/pages stay in sync
+  window.addEventListener('storage', (e)=>{
+    if(e.key === 'cart'){
+      try{ cart = JSON.parse(e.newValue || '{}') }catch(err){ cart = {} }
+      updateCartCount()
+      if(cartModal.style.display === 'flex') renderCart()
+    }
+  })
+  </script>
+</body>
+</html>
