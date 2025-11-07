@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Đăng ký - Pen&Paper</title>
+        <style>
+            :root{
+                --pink-100:#fff0f6;
+                --pink-200:#ffd6e8;
+                --pink-300:#ff85c0;
+                --pink-400:#f06595;
+                --text:#3a3a3a;
+                --muted:#777;
+                --card-bg:#ffffff;
+            }
+            *{box-sizing:border-box}
+            body{font-family:Segoe UI, Roboto, Arial, sans-serif;background:linear-gradient(180deg,var(--pink-100),#fff);color:var(--text);margin:0;padding:24px}
+            .page-wrap{max-width:900px;margin:24px auto;padding:20px}
+            .brand{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+            .brand .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--pink-300),var(--pink-400));display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+            .brand h1{font-size:20px;margin:0;color:var(--pink-400)}
+
+            .card{background:var(--card-bg);border-radius:12px;padding:20px;box-shadow:0 6px 18px rgba(240,64,128,0.12);}
+            .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+            .form-row{display:flex;flex-direction:column;margin-bottom:8px}
+            label{font-size:13px;color:var(--muted);margin-bottom:6px}
+            input[type=text],input[type=email],input[type=password],select{padding:10px 12px;border:1px solid #f0c; border-color:rgba(240,80,128,0.12);background:#fff;border-radius:8px;font-size:14px}
+            input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,select:focus{outline:2px solid rgba(240,80,128,0.18)}
+            .full{grid-column:1/-1}
+            .date-inline{display:flex;gap:8px;align-items:center}
+            .gender{display:flex;gap:12px;align-items:center}
+            .actions{display:flex;gap:12px;justify-content:center;margin-top:18px}
+            .btn{padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+            .btn.primary{background:linear-gradient(90deg,var(--pink-300),var(--pink-400));color:#fff;box-shadow:0 6px 14px rgba(240,64,128,0.18)}
+            .btn.ghost{background:transparent;border:1px solid rgba(240,80,128,0.12);color:var(--pink-400)}
+            legend{font-weight:700;color:var(--pink-400);padding:0 6px}
+            h2{margin-top:0;color:var(--pink-400)}
+            @media (max-width:700px){.form-grid{grid-template-columns:1fr}.brand h1{font-size:18px}}
+        </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="brand">
+            <div class="logo">PP</div>
+            <h1>Pen&Paper — Đăng ký thành viên</h1>
+        </div>
+
+        <div class="card">
+            <form action="http://127.0.0.1:5500/b%C3%A0i%20cu%E1%BB%91i%20m%C3%B4n/stationery-store/index.html" method="get" enctype="text/plain" name="dangky">
+                <h2>Thông tin cá nhân</h2>
+                <fieldset style="border:0;padding:0;margin:0 0 12px 0">
+                    <div class="form-grid">
+                        <div class="form-row full">
+                            <label for="ho_ten">Họ và tên</label>
+                            <input id="ho_ten" name="ho_ten" type="text" placeholder="Nguyễn Văn A">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="ngay_sinh">Ngày sinh</label>
+                            <div class="date-inline">
+                                <select id="ngay_sinh" name="ngay_sinh">
+                                    <script>
+                                        for (let i = 1; i <= 31; i++) {
+                                            document.write('<option value="' + String(i).padStart(2,'0') + '">' + String(i).padStart(2,'0') + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                                <select id="thang_sinh" name="thang_sinh">
+                                    <script>
+                                        for (let i = 1; i <= 12; i++) {
+                                            document.write('<option value="' + String(i).padStart(2,'0') + '">' + String(i).padStart(2,'0') + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                                <input id="nam_sinh" name="nam_sinh" type="text" placeholder="YYYY" style="width:88px">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label>Giới tính</label>
+                            <div class="gender">
+                                <label><input type="radio" id="nam" name="gioi_tinh" value="Nam" checked> Nam</label>
+                                <label><input type="radio" id="nu" name="gioi_tinh" value="Nu"> Nữ</label>
+                                <label><input type="radio" id="khac" name="gioi_tinh" value="Khac"> Khác</label>
+                            </div>
+                        </div>
+
+                        <div class="form-row full">
+                            <label for="dia_chi">Địa chỉ</label>
+                            <input id="dia_chi" name="dia_chi" type="text">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="dien_thoai">Điện thoại</label>
+                            <input id="dien_thoai" name="dien_thoai" type="text" placeholder="09xxxxxxxx">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" required placeholder="name@example.com">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <h2>Thông tin đăng nhập</h2>
+                <fieldset style="border:0;padding:0;margin:0">
+                    <div class="form-grid" style="margin-top:6px">
+                        <div class="form-row full">
+                            <label for="ten_dang_nhap">Tên đăng nhập</label>
+                            <input id="ten_dang_nhap" name="ten_dang_nhap" type="text" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="mat_khau">Mật khẩu</label>
+                            <input id="mat_khau" name="mat_khau" type="password" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="nhap_lai_mat_khau">Nhập lại mật khẩu</label>
+                            <input id="nhap_lai_mat_khau" name="nhap_lai_mat_khau" type="password" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="actions">
+                    <button type="submit" class="btn primary">Đăng ký</button>
+                    <button type="reset" class="btn ghost">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
